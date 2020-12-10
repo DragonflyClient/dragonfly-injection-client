@@ -1,6 +1,16 @@
+# root project
 /.gradle
 /gradle
 /gradlew.bat
 /gradlew
-
 /.idea
+/build
+
+# 1.8.8
+/1.8.8/minecraft/build
+/1.8.8/injection-hook/build
+
+# shared
+/shared/agent/build
+/shared/injection-hook/build
+/shared/obfuscator/build

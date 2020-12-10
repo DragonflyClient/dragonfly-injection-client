@@ -6,5 +6,13 @@ group = "net.dragonfly"
 version = "1.0-SNAPSHOT"
 
 dependencies {
-    compileOnly(fileTree("libraries"))
+    implementation(fileTree("libraries"))
+}
+
+sourceSets {
+    main {
+        java {
+            srcDir("src/main/java")
+        }
+    }
 }

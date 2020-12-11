@@ -30,6 +30,13 @@ tasks {
         }
 
         from(configurations.runtimeClasspath.get().map { if (it.isDirectory) it else zipTree(it) })
-        archiveName = "obfuscation-api.jar"
+        archiveFileName.set("obfuscator.jar")
+    }
+
+    create<Copy>("binJar") {
+        dependsOn("jar")
+        from(getByName<Jar>("jar").archiveFile.get())
+        into(rootProject.file("bin"))
+        rename { "obfuscator.jar" }
     }
 }

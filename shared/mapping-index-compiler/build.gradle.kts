@@ -36,4 +36,11 @@ tasks {
         from(configurations.runtimeClasspath.get().map { if (it.isDirectory) it else zipTree(it) })
         archiveFileName.set("mapping-index-compiler.jar")
     }
+
+    create<Copy>("binJar") {
+        dependsOn("jar")
+        from(getByName<Jar>("jar").archiveFile.get())
+        into(rootProject.file("bin"))
+        rename { "mapping-index-compiler.jar" }
+    }
 }

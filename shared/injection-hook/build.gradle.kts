@@ -23,6 +23,6 @@ dependencies {
 
 tasks {
     jar {
-        archiveFileName.set("shared-injection-hook.jar")
+        archiveFileName.set("injection-hook-shared.jar")
     }
 }

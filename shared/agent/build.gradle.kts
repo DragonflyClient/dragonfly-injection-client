@@ -41,7 +41,7 @@ tasks {
             attributes["Can-Retransform-Classes"] = "true"
         }
 
-        archiveName = "shared-agent.jar"
+        archiveFileName.set("agent-shared.jar")
         from(configurations.runtimeClasspath.get().map { if (it.isDirectory) it else zipTree(it) })
     }
 }

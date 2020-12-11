@@ -57,9 +57,7 @@ class DragonflyAgent private constructor(
      */
     private fun prepareObfuscator() {
         log("> Parsing obfuscation mappings...")
-        Obfuscator.parseMappings(File("dragonfly\\mappings\\$minecraftVersion\\index.pack")) {
-            log("> Obfuscation mappings have been fully loaded!")
-        }
+        Obfuscator.parseMappings(File("dragonfly\\mappings\\$minecraftVersion\\index.pack"))
     }
 
     /**

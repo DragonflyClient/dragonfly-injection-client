@@ -13,7 +13,7 @@ class EditTransformer(
     private val editFunction: CtClass.() -> Unit,
 ) : ClassFileTransformer {
 
-    private val targetClassName = classSpecification.className
+    private val targetClassName = classSpecification.obfuscated.className
     private val targetFileName = targetClassName.replace(".", "/")
 
     override fun transform(

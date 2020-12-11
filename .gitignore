@@ -14,3 +14,4 @@
 /shared/agent/build
 /shared/injection-hook/build
 /shared/obfuscator/build
+/shared/mapping-index-compiler/build

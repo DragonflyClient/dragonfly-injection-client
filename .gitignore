@@ -15,3 +15,9 @@
 /shared/injection-hook/build
 /shared/obfuscator/build
 /shared/mapping-index-compiler/build
+
+# building
+/mappings/1.8.8/
+/components/1.8.8/
+/bin/mapping-index-compiler.jar
+/bin/obfuscator.jar

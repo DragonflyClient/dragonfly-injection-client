@@ -1,6 +1,6 @@
 package net.dragonfly.agent.transformer
 
-import net.dragonfly.agent.log
+import net.dragonfly.agent.DragonflyAgent
 import net.dragonfly.agent.tweaker.*
 import net.dragonfly.obfuscation.Obfuscator
 import net.dragonfly.obfuscation.mapping.ClassMapping
@@ -32,7 +32,7 @@ class TweakTransformer(
         }
 
         try {
-            log("> Applying tweak transformer ${tweaker::class.simpleName} to $targetClassName")
+            DragonflyAgent.getInstance().log("> Applying tweak transformer ${tweaker::class.simpleName} to $targetClassName")
 
             val src = ClassNode()
             val dest = ClassNode()
@@ -48,11 +48,11 @@ class TweakTransformer(
                     val old = dest.methods.firstOrNull { o -> o.name == spec.methodName && o.desc == spec.descriptor }
 
                     if (old != null) {
-                        log("> Substituting method ${dest.name}.${old.name}${old.desc} with ${src.name}.${method.name}")
+                        DragonflyAgent.getInstance().log("> Substituting method ${dest.name}.${old.name}${old.desc} with ${src.name}.${method.name}")
                         method.access = old.access
                         dest.methods.remove(old)
                     } else {
-                        log("> Cloning method ${src.name}.${method.name}${method.desc} into ${dest.name}")
+                        DragonflyAgent.getInstance().log("> Cloning method ${src.name}.${method.name}${method.desc} into ${dest.name}")
                     }
 
                     method.name = spec.methodName
@@ -88,7 +88,7 @@ class TweakTransformer(
                                 it.deobfuscated == name && tweaker::class.java.name.replace(".", "/") == owner
                             } ?: return super.visitFieldInsn(opcode, owner, name, descriptor)
 
-                            log("> Remapping field ${owner}.${name} -> ${targetField.classMapping.obfuscated}.${targetField.obfuscated}")
+                            DragonflyAgent.getInstance().log("> Remapping field ${owner}.${name} -> ${targetField.classMapping.obfuscated}.${targetField.obfuscated}")
                             return super.visitFieldInsn(opcode, targetField.classMapping.obfuscated, targetField.obfuscated, descriptor)
                         }
 
@@ -117,8 +117,8 @@ class TweakTransformer(
             File("tweaked.class").writeBytes(cw.toByteArray())
             return cw.toByteArray()
         } catch (e: Exception) {
-            log("! Error transforming class $targetClassName!")
-            log(e.stackTraceToString())
+            DragonflyAgent.getInstance().log("! Error transforming class $targetClassName!")
+            DragonflyAgent.getInstance().log(e.stackTraceToString())
         }
 
         return classfileBuffer

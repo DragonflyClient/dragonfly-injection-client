@@ -8,10 +8,6 @@ open class Tweaker(val targetClass: ClassSpecification) {
 
 @Retention(AnnotationRetention.RUNTIME)
 @Target(AnnotationTarget.FUNCTION)
-annotation class Tweak
-
-@Retention(AnnotationRetention.RUNTIME)
-@Target(AnnotationTarget.FUNCTION)
 annotation class SubstituteMethod
 
 @Retention(AnnotationRetention.RUNTIME)

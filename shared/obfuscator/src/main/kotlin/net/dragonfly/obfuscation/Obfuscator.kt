@@ -12,7 +12,7 @@ object Obfuscator {
     var finishedParsing = false
         private set
 
-    fun parseMappings(file: File) = thread(name = "mappings parser", start = true) {
+    fun parseMappings(file: File, callback: () -> Unit = {}) = thread(name = "mappings parser", start = true) {
         val lines = file.readLines()
 
         classObfuscator.mappings.clear()
@@ -50,10 +50,7 @@ object Obfuscator {
             method.deobfuscatedDescriptor = MethodDescriptor(deobfParams, deobfReturn)
         }
 
-        if (badLines > 0)
-            println("> Skipped $badLines bad lines while parsing mappings")
-
-        println("> Finished parsing mappings")
+        callback()
         finishedParsing = true
     }
 

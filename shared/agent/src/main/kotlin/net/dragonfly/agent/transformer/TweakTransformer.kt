@@ -75,8 +75,7 @@ class TweakTransformer(
                         .filter { it.hasAnnotation(Remap::class) }
                         .map {
                             val spec = FieldSpecification(tweaker.targetClass.className, it.name)
-                            val specObf = FieldSpecification(tweaker.targetClass.obfuscated.className, it.name)
-                            Obfuscator.fields().findMapping(specObf) ?: FieldMapping(
+                            Obfuscator.fields().findMapping(spec) ?: FieldMapping(
                                 ClassMapping(spec.clazz, spec.clazz),
                                 spec.fieldName, spec.fieldName
                             )

@@ -2,7 +2,6 @@ package net.dragonfly.injection188
 
 import net.dragonfly.agent.DragonflyAgent
 import net.dragonfly.agent.dsl.InstrumentationWrapper
-import net.dragonfly.agent.dsl.editMethod
 import net.dragonfly.agent.hook.*
 import org.apache.logging.log4j.LogManager
 
@@ -27,12 +26,6 @@ object CoreInjectionHook : InjectionHook() {
     }
 
     override fun InstrumentationWrapper.configure() {
-        editClass("net.minecraft.client.gui.GuiMainMenu") {
-            editMethod("switchToRealms") {
-                setBody("""
-                    this.r = "heyho minecraft freunde!";
-                """.trimIndent())
-            }
-        }
+        tweaker(GuiMainMenuTweaker())
     }
 }

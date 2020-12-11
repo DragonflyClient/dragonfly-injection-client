@@ -8,7 +8,7 @@ class MethodObfuscator : Obfuscator.EntityObfuscator<MethodSpecification, Method
     override val mappings = mutableListOf<MethodMapping>()
 
     override fun findMapping(spec: MethodSpecification): MethodMapping? =
-        mappings.toList().filter { it.deobfuscated == spec.clazz.toSlashSeparated() }
+        mappings.toList().filter { it.classMapping.deobfuscated == spec.clazz.toSlashSeparated() }
             .filter { it.deobfuscated == spec.methodName }
             .firstOrNull { spec.descriptor == null || it.deobfuscatedDescriptor.toString() == spec.descriptor }
 

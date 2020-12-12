@@ -80,8 +80,13 @@ class MappingIndexCompiler(
 
         // download mappings and srg zips
         println("> Downloading files")
-        makeMappingsUrl(index).readBytes().let { mappingsZip.writeBytes(it) }
-        makeSrgUrl(index).readBytes().let { srgZip.writeBytes(it) }
+        makeMappingsUrl(index)
+            .also { println("> Mappings: $it") }
+            .readBytes().let { mappingsZip.writeBytes(it) }
+
+        makeSrgUrl(index)
+            .also { println("> Searge: $it") }
+            .readBytes().let { srgZip.writeBytes(it) }
     }
 
     private fun cleanTempDir(recreate: Boolean = false) {
@@ -143,10 +148,14 @@ class MappingIndexCompiler(
     }
 
     private fun makeMappingsUrl(index: MappingIndex): URL = index.run {
-        URL("http://export.mcpbot.bspk.rs/" +
-                "mcp_${channel}/" +
-                "${indexVersion}-${minecraftVersion}/" +
-                "mcp_${channel}-${indexVersion}-${minecraftVersion}.zip")
+        if (isModernVersion()) {
+            makeForgeMappingsUrl(index)
+        } else {
+            URL("http://export.mcpbot.bspk.rs/" +
+                    "mcp_${channel}/" +
+                    "${indexVersion}-${minecraftVersion}/" +
+                    "mcp_${channel}-${indexVersion}-${minecraftVersion}.zip")
+        }
     }
 
     private fun makeSrgUrl(index: MappingIndex) = index.run {
@@ -160,18 +169,47 @@ class MappingIndexCompiler(
         }
     }
 
+    // http://files.minecraftforge.net/maven/de/oceanlabs/mcp/mcp_snapshot/20201028-1.16.3/mcp_snapshot-20201028-1.16.3.zip
+    // http://files.minecraftforge.net/maven/de/oceanlabs/mcp/mcp_snapshot/20201210-1.15.1/mcp_snapshot-20201210-1.15.1.zip
     private fun makeForgeSrgUrl(index: MappingIndex): URL = index.run {
-        val doc: Document = Jsoup.connect("https://files.minecraftforge.net/" +
+        var targetUrl = "https://files.minecraftforge.net/" +
                 "maven/de/oceanlabs/mcp/mcp_config/" +
-                "index_$minecraftVersion.html").get()
+                "index_$minecraftVersion.html"
+
+        if (Main.programArguments.version != minecraftVersion) {
+            // if using outdated mcp mappings, try to find newer searge mappings
+            val latestForgeUrl = "https://files.minecraftforge.net/" +
+                    "maven/de/oceanlabs/mcp/mcp_config/" +
+                    "index_${Main.programArguments.version}.html"
+
+            if (URL(latestForgeUrl).exists()) {
+                println("> Found newer searge mappings on Forge Maven")
+                targetUrl = latestForgeUrl
+            }
+        }
+
+        val doc: Document = Jsoup.connect(targetUrl).get()
         val link = doc.getElementsByClass("link")[0].child(0).attr("href")
         URL("https://files.minecraftforge.net$link")
+    }
+
+    private fun makeForgeMappingsUrl(index: MappingIndex): URL = index.run {
+        URL("http://files.minecraftforge.net/maven/de/oceanlabs/mcp/mcp_snapshot/" +
+                "$indexVersion-$minecraftVersion/" +
+                "mcp_$channel-$indexVersion-$minecraftVersion.zip")
     }
 
     @Suppress("UnstableApiUsage")
     private fun File.checksum() = Files.asByteSource(this).hash(Hashing.sha1()).toString()
 
     private fun File.parseCSV() = readLines().drop(1).map { it.split(",") }.associate { it[0] to it[1] }
+
+    private fun URL.exists(): Boolean = try {
+        readBytes()
+        true
+    } catch (e: Throwable) {
+        false
+    }
 
     private infix fun String.inside(directory: File) = File(directory.also { it.mkdirs() }, this)
 }

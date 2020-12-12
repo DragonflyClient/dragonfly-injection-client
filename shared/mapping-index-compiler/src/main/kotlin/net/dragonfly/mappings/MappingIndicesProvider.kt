@@ -26,6 +26,8 @@ class MappingIndicesProvider {
                 }
             }
         }
+
+        mappings.add(MappingIndex("1.16.3", "snapshot", 20201028))
     }
 
     fun get(): List<MappingIndex> {
@@ -37,11 +39,27 @@ class MappingIndicesProvider {
         fetchIfAbsent()
 
         val indexesForVersion = mappings.filter { it.minecraftVersion == minecraftVersion }
-            .takeUnless { it.isEmpty() } ?: return null
+            .takeUnless { it.isEmpty() }
+            ?: getIndexesForMajorVersion(minecraftVersion)
+            ?: return null
+
         val preferredIndexes = indexesForVersion.filter { it.channel == "stable" }
-            .takeUnless { it.isEmpty() } ?: indexesForVersion
+            .takeUnless { it.isEmpty() }
+            ?: indexesForVersion
 
         return preferredIndexes.maxByOrNull { it.indexVersion }
+    }
+
+    private fun getIndexesForMajorVersion(minecraftVersion: String): List<MappingIndex>? {
+        val split = minecraftVersion.split(".")
+        if (split.size == 2) return null
+
+        println("> Have to use indices from major version ${split[0]}.${split[1]}")
+
+        return mappings.filter {
+            val itSplit = it.minecraftVersion.split(".")
+            itSplit[0] == split[0] && itSplit[1] == split[1]
+        }.takeUnless { it.isEmpty() }
     }
 
     private fun fetchIfAbsent() {

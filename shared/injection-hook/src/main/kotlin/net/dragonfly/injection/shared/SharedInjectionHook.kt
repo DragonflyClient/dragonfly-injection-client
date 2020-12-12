@@ -8,5 +8,6 @@ object SharedInjectionHook : InjectionHook() {
 
     override fun InstrumentationWrapper.configure() {
         tweaker(ClientBrandRetrieverTweaker)
+        tweaker(GuiMainMenuTweaker())
     }
 }

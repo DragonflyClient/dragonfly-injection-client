@@ -1,4 +1,4 @@
-package net.dragonfly.injection188
+package net.dragonfly.injection112
 
 import net.dragonfly.agent.DragonflyAgent
 import net.dragonfly.agent.api.GuiAPI
@@ -11,7 +11,7 @@ import net.minecraft.client.gui.GuiMultiplayer
 import org.apache.logging.log4j.LogManager
 
 object CoreInjectionHook : InjectionHook() {
-    override val name: String = "Core Injection Hook Minecraft 1.8.8"
+    override val name: String = "Core Injection Hook Minecraft 1.12"
 
     override fun premain(agent: DragonflyAgent) {
         agent.loggingProvider = object : LoggingProvider {

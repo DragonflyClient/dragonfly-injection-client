@@ -10,6 +10,14 @@
 /1.8.8/minecraft/build
 /1.8.8/injection-hook/build
 
+# 1.12
+/1.12/minecraft/build/
+/1.12/injection-hook/build/
+
+# 1.16.4
+/1.16.4/minecraft/build/
+/1.16.4/injection-hook/build/
+
 # shared
 /shared/agent/build
 /shared/injection-hook/build
@@ -17,7 +25,7 @@
 /shared/mapping-index-compiler/build
 
 # building
-/mappings/1.8.8/
-/components/1.8.8/
+/mappings/
+/components/
 /bin/mapping-index-compiler.jar
 /bin/obfuscator.jar

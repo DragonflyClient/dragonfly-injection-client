@@ -60,7 +60,7 @@ class TweakTransformer(
                     dest.methods.add(method)
                 }
 
-            val cw = ClassWriter(0)
+            val cw = ClassWriter(ClassWriter.COMPUTE_FRAMES)
             val tweaker = object : ClassVisitor(Opcodes.ASM9, TraceClassVisitor(cw, PrintWriter(File("tweaked.txt")))) {
                 override fun visitMethod(
                     access: Int, name: String?, descriptor: String?, signature: String?,

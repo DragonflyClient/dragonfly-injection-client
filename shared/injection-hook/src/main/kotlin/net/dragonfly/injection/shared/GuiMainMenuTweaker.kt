@@ -10,7 +10,7 @@ class GuiMainMenuTweaker : Tweaker(GuiAPI.switcher!!.mainMenuName) {
 
     @SubstituteMethod
     fun switchToRealms() {
-//        splashText = "Welcome to Minecraft " + GuiAPI.switcher?.version
+        splashText = "Welcome to Minecraft " + GuiAPI.switcher?.version
         GuiAPI.switcher?.switchToMultiplayer()
     }
 }

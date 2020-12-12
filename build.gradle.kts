@@ -8,6 +8,9 @@ tasks {
     minecraftVersionProjects.forEach { versionProject ->
         val version = versionProject.name
         create<Exec>("mappings-$version") {
+            onlyIf {
+                !File("mappings/$version/index.pack").exists()
+            }
             group = version
             dependsOn(":shared:mapping-index-compiler:binJar")
             workingDir = projectDir
@@ -18,8 +21,14 @@ tasks {
         }
 
         create<Exec>("obfuscate-$version") {
+            onlyIf {
+                !project(":$version:injection-hook").tasks.getByName("jar").state.upToDate ||
+                        !project(":shared:obfuscator").tasks.getByName("binJar").state.upToDate
+            }
+
             group = version
             dependsOn("mappings-$version", ":$version:injection-hook:jar", ":shared:obfuscator:binJar")
+
             workingDir = projectDir
             commandLine("cmd", "/c", "java", "-jar", "bin/obfuscator.jar")
             args("--reversed", "mappings/$version/reversed.srg")

@@ -19,7 +19,7 @@ class InstrumentationWrapper(
 
     fun tweaker(tweaker: Tweaker) {
         instrumentation.addTransformer(TweakTransformer(tweaker), true)
-        DragonflyAgent.getInstance().log("> Registered tweak transformer for ${tweaker.targetClass}")
+        DragonflyAgent.getInstance().log("> Registered tweak transformer for ${tweaker.targetClass} (${tweaker.targetClass.obfuscated.className})")
     }
 
     fun transformer(transformer: ClassFileTransformer) {

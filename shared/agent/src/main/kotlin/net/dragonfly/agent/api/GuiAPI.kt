@@ -5,5 +5,7 @@ object GuiAPI {
 }
 
 interface GuiSwitcher {
+    val version: String?
+    val mainMenuName: String
     fun switchToMultiplayer()
 }

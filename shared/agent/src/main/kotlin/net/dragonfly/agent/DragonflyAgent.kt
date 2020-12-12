@@ -106,7 +106,8 @@ class DragonflyAgent private constructor(
             } catch (e: ClassNotFoundException) {
                 log("! Could not resolve bootstrap class $bootstrap")
             } catch (e: Throwable) {
-                log("! Could not load injection hook $bootstrap: $e")
+                log("! Could not load injection hook $bootstrap:")
+                log(e.stackTraceToString())
             }
 
             if (configuration.requireAllHooks) {

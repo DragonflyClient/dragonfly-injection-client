@@ -9,11 +9,26 @@ import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiMainMenu
 import net.minecraft.client.gui.GuiMultiplayer
 import org.apache.logging.log4j.LogManager
+import kotlin.concurrent.thread
 
-object CoreInjectionHook : InjectionHook() {
+object InjectionHook188 : InjectionHook() {
     override val name: String = "Core Injection Hook Minecraft 1.8.8"
 
     override fun premain(agent: DragonflyAgent) {
+        GuiAPI.switcher = object : GuiSwitcher {
+            override val version: String
+                get() = Minecraft.getMinecraft().version
+            override val mainMenuName: String = "net.minecraft.client.gui.GuiMainMenu"
+
+            override fun switchToMultiplayer() {
+                thread(start = true) {
+                    Thread.sleep(5_000)
+                    Minecraft.getMinecraft().addScheduledTask {
+                        Minecraft.getMinecraft().displayGuiScreen(GuiMultiplayer(GuiMainMenu()))
+                    }
+                }
+            }
+        }
         agent.loggingProvider = object : LoggingProvider {
             override fun sendLog(message: String, level: Level) {
                 LogManager.getLogger("dragonfly-injector").log(translateLevel(level), message)
@@ -31,10 +46,5 @@ object CoreInjectionHook : InjectionHook() {
     }
 
     override fun InstrumentationWrapper.configure() {
-        GuiAPI.switcher = object : GuiSwitcher {
-            override fun switchToMultiplayer() {
-                Minecraft.getMinecraft().displayGuiScreen(GuiMultiplayer(GuiMainMenu()))
-            }
-        }
     }
 }

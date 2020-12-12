@@ -22,8 +22,9 @@ tasks {
             dependsOn("mappings-$version", ":$version:injection-hook:jar", ":shared:obfuscator:binJar")
             workingDir = projectDir
             commandLine("cmd", "/c", "java", "-jar", "bin/obfuscator.jar")
-            args("--searge", "mappings/$version/mappings.srg")
+            args("--reversed", "mappings/$version/reversed.srg")
             args("--mapping-index", "mappings/$version/index.pack")
+            args("--minecraft-jar", "$version/minecraft/build/libs/minecraft-1.0-SNAPSHOT.jar")
             args("--input-jar", "$version/injection-hook/build/libs/injection-hook-$version.jar")
             args("--output-jar", "$version/injection-hook/build/libs/injection-hook-$version-obfuscated.jar")
             args("--special-source", "bin/specialsource.jar")

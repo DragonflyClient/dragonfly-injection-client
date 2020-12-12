@@ -20,18 +20,18 @@ object SpecialSourceWrapper {
             exitProcess(404)
         }
 
-        if (!args.seargeFile.exists()) {
-            println("> Creating searge mappings from index file ${args.indexFile}")
+        if (!args.reversedMappings.exists()) {
+            println("> Creating reversed mappings from index file ${args.indexFile}")
 
             if (!args.indexFile.exists()) {
                 println("! Index file doesn't exist")
                 exitProcess(404)
             }
 
-            createSeargeMappings(args.indexFile, args.seargeFile)
-            println("> Searge mappings created")
+            createReversedSeargeMappings(args.indexFile, args.reversedMappings)
+            println("> Reversed mappings created")
         } else {
-            println("> Using searge mappings from existing file ${args.seargeFile}")
+            println("> Using reversed mappings from existing file ${args.reversedMappings}")
         }
 
         println("== Launching SpecialSource ==")
@@ -41,13 +41,13 @@ object SpecialSourceWrapper {
 
         println("== SpecialSource output ==")
         val process = ProcessBuilder()
-            .command(
-                "java", "-jar", args.specialSource,
-                "-i", args.inputJar,
-                "-o", args.outputJar,
-                "-r",
-                "-m", args.seargeFile.absolutePath,
-                "-e", "paulscode,com,isom,ibxm,de/matthiasmann/twl,org,javax,argo,gnu,io/netty,oshi"
+            .command("java",
+                "-cp", args.minecraftJar + ";" + args.specialSource,
+                "net.md_5.specialsource.SpecialSource",
+                "--in-jar", args.inputJar,
+                "--out-jar", args.outputJar,
+                "--srg-in", args.reversedMappings.absolutePath,
+                "--live"
             )
             .directory(File("."))
             .inheritIO()
@@ -63,7 +63,7 @@ object SpecialSourceWrapper {
         }
     }
 
-    private fun createSeargeMappings(indexFile: File, seargeFile: File) = Obfuscator.run {
+    private fun createReversedSeargeMappings(indexFile: File, seargeFile: File) = Obfuscator.run {
         mutableListOf<String>().apply {
             parseMappings(indexFile)
 
@@ -79,11 +79,11 @@ object SpecialSourceWrapper {
 }
 
 private fun MutableList<String>.classLine(it: ClassMapping) =
-    add("CL: ${it.obfuscated} ${it.deobfuscated}")
+    add("CL: ${it.deobfuscated} ${it.obfuscated}")
 
 private fun MutableList<String>.fieldLine(it: FieldMapping) =
-    add("FD: ${it.classMapping.obfuscated}/${it.obfuscated} ${it.classMapping.deobfuscated}/${it.deobfuscated}")
+    add("FD: ${it.classMapping.deobfuscated}/${it.deobfuscated} ${it.classMapping.obfuscated}/${it.obfuscated}")
 
 private fun MutableList<String>.methodLine(it: MethodMapping) =
-    add("MD: ${it.classMapping.obfuscated}/${it.obfuscated} ${it.obfuscatedDescriptor} " +
-            "${it.classMapping.deobfuscated}/${it.deobfuscated} ${it.deobfuscatedDescriptor}")
+    add("MD: ${it.classMapping.deobfuscated}/${it.deobfuscated} ${it.deobfuscatedDescriptor} " +
+            "${it.classMapping.obfuscated}/${it.obfuscated} ${it.obfuscatedDescriptor}")

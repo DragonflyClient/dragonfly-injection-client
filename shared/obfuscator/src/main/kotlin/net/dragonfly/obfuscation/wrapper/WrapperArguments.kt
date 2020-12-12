@@ -4,9 +4,9 @@ import com.xenomachina.argparser.ArgParser
 import java.io.File
 
 class WrapperArguments(parser: ArgParser) {
-    val seargeFile by parser.storing(
-        "-s", "--searge",
-        help = "File that holds the searge mappings or to which they should be saved"
+    val reversedMappings by parser.storing(
+        "-r", "--reversed",
+        help = "File that holds the reversed mappings or to which they should be saved"
     ) { File(this) }
 
     val indexFile by parser.storing(
@@ -27,5 +27,10 @@ class WrapperArguments(parser: ArgParser) {
     val specialSource by parser.storing(
         "-j", "--special-source",
         help = "Jar file of the specialsource obfuscator by md_5"
+    )
+
+    val minecraftJar by parser.storing(
+        "-c", "--minecraft-jar",
+        help = "Clean jar file of the Minecraft version that is obfuscated"
     )
 }

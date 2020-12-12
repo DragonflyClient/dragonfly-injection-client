@@ -13,33 +13,34 @@ object SpecialSourceWrapper {
     fun main(input: Array<String>) = mainBody {
         val args = ArgParser(input).parseInto(::WrapperArguments)
 
-        println("== Dragonfly Obfuscation API ==")
+        println("\n$BA1=== ${BL}Dragonfly Obfuscator $BA1===")
 
         if (!File(args.inputJar).exists()) {
-            println("! Input JAR file doesn't exist")
+            println("$BA1! ${RE}Input jar file doesn't exist")
             exitProcess(404)
         }
 
         if (!args.reversedMappings.exists()) {
-            println("> Creating reversed mappings from index file ${args.indexFile}")
+            println("$BA1> ${R}Creating reversed mappings from index file ${args.indexFile}")
 
             if (!args.indexFile.exists()) {
-                println("! Index file doesn't exist")
+                println("$BA1! Index file doesn't exist")
+                println(R)
                 exitProcess(404)
             }
 
             createReversedSeargeMappings(args.indexFile, args.reversedMappings)
-            println("> Reversed mappings created")
+            println("$BA1> ${R}Reversed mappings created")
         } else {
-            println("> Using reversed mappings from existing file ${args.reversedMappings}")
+            println("$BA1> ${R}Using reversed mappings from existing file ${args.reversedMappings}")
         }
 
-        println("== Launching SpecialSource ==")
-        println("> Path: ${args.specialSource}")
-        println("> Input JAR: ${args.inputJar}")
-        println("> Output JAR: ${args.outputJar}")
+        println("$BA1== ${PU}Launching Special Source $BA1==")
+        println("$BA1> ${R}Path: ${args.specialSource}")
+        println("$BA1> ${R}Input jar: ${args.inputJar}")
+        println("$BA1> ${R}Output jar: ${args.outputJar}")
 
-        println("== SpecialSource output ==")
+        println("$BA1== ${YE}Special Source Output $BA1==$R")
         val process = ProcessBuilder()
             .command("java",
                 "-cp", args.minecraftJar + ";" + args.specialSource,
@@ -54,13 +55,15 @@ object SpecialSourceWrapper {
             .start()
 
         val exitCode = process.waitFor()
-        println("== End of SpecialSource output ==")
+        println("$BA1== ${YE}End of Special Source Output $BA1==")
 
         if (exitCode != 0) {
-            println("! Error: Process finished with exit code $exitCode")
+            println("$BA1! ${RE}Error: Process finished with exit code $exitCode")
         } else {
-            println("+ Done")
+            println("$BA1+ ${GR}Done")
         }
+
+        println(R)
     }
 
     private fun createReversedSeargeMappings(indexFile: File, seargeFile: File) = Obfuscator.run {

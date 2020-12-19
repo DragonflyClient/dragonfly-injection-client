@@ -13,13 +13,13 @@ println("--------------------------------\n")
 
 tasks {
     editions.forEach { edition ->
-        val (version, _) = edition
+        val (version, codename) = edition
 
         create<Exec>("mappings-$version") {
             onlyIf {
                 !File("mappings/$version/index.pack").exists()
             }
-            group = version
+            group = "$version ($codename)"
             dependsOn(":shared:mapping-index-compiler:binJar")
             workingDir = projectDir
             commandLine("cmd", "/c", "java", "-jar", "bin/mapping-index-compiler.jar")
@@ -34,7 +34,7 @@ tasks {
                         !project(":shared:obfuscator").tasks.getByName("binJar").state.upToDate
             }
 
-            group = version
+            group = "$version ($codename)"
             dependsOn("mappings-$version", ":$version:injection-hook:jar", ":shared:obfuscator:binJar")
 
             workingDir = projectDir
@@ -48,7 +48,7 @@ tasks {
         }
 
         create<Copy>("components-$version") {
-            group = version
+            group = "$version ($codename)"
             dependsOn("obfuscate-$version", ":shared:agent:jar", ":shared:injection-hook:jar")
             from(
                 "$version/injection-hook/build/libs/injection-hook-$version-obfuscated.jar",

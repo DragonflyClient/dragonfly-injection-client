@@ -5,22 +5,23 @@
 /gradlew
 /.idea
 /build
+gradle.properties
 
 # 1.8.8
-/1.8.8/minecraft/build
-/1.8.8/injection-hook/build
+/1.8.8-octane/minecraft/build
+/1.8.8-octane/injection-hook/build
 
 # 1.12
-/1.12/minecraft/build/
-/1.12/injection-hook/build/
+/1.12-vision/minecraft/build/
+/1.12-vision/injection-hook/build/
 
 # 1.16.4
-/1.16.4/minecraft/build/
-/1.16.4/injection-hook/build/
+/1.16.4-vortex/minecraft/build/
+/1.16.4-vortex/injection-hook/build/
 
 # shared
 /shared/agent/build
-/shared/injection-hook/build
+/shared/dragonfly-core/build
 /shared/obfuscator/build
 /shared/mapping-index-compiler/build
 

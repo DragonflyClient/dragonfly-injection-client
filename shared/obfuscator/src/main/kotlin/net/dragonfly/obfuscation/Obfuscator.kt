@@ -67,25 +67,32 @@ object Obfuscator {
     interface EntityObfuscator<S, M> {
         val mappings: MutableList<M>
 
-        fun createSpec(map: M): S
+        fun createObfuscatedSpec(map: M): S
+        fun createDeobfuscatedSpec(map: M): S
+
         fun findMapping(spec: S): M?
+        fun findReverseMapping(obfSpec: S): M?
 
         /**
          * Returns null if there is no obfuscation mapping for the given [spec].
          */
-        fun obfuscateOrNull(spec: S): S? {
-            return awaitMapping(spec)?.let { createSpec(it) }
-        }
+        fun obfuscateOrNull(spec: S): S? =
+            awaitMapping(::findMapping, spec)?.let { createObfuscatedSpec(it) }
 
         /**
          * Returns the given [spec] itself if there is no obfuscation mapping for it.
          */
         fun obfuscate(spec: S) = obfuscateOrNull(spec) ?: spec
 
-        private fun awaitMapping(spec: S): M? {
-            var found: M? = findMapping(spec)
+        fun deobfuscateOrNull(spec: S): S? =
+            awaitMapping(::findReverseMapping, spec)?.let { createDeobfuscatedSpec(it) }
+
+        fun deobfuscate(spec: S) = deobfuscateOrNull(spec) ?: spec
+
+        private fun awaitMapping(function: (S) -> M?, spec: S): M? {
+            var found: M? = function(spec)
             while (!finishedParsing && found == null) {
-                found = findMapping(spec)
+                found = function(spec)
                 Thread.sleep(5)
             }
 

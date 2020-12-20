@@ -11,8 +11,17 @@ class FieldObfuscator : Obfuscator.EntityObfuscator<FieldSpecification, FieldMap
         mappings.toList().filter { it.classMapping.deobfuscated == spec.clazz.toSlashSeparated() }
             .firstOrNull { it.deobfuscated == spec.fieldName }
 
-    override fun createSpec(map: FieldMapping) = FieldSpecification(
+    override fun findReverseMapping(obfSpec: FieldSpecification): FieldMapping? =
+        mappings.toList().filter { it.classMapping.obfuscated == obfSpec.clazz.toSlashSeparated() }
+            .firstOrNull { it.obfuscated == obfSpec.fieldName }
+
+    override fun createObfuscatedSpec(map: FieldMapping) = FieldSpecification(
         clazz = map.classMapping.obfuscated.toDotSeparated(),
         fieldName = map.obfuscated
+    )
+
+    override fun createDeobfuscatedSpec(map: FieldMapping) = FieldSpecification(
+        clazz = map.classMapping.deobfuscated.toDotSeparated(),
+        fieldName = map.deobfuscated
     )
 }

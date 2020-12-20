@@ -10,7 +10,14 @@ class ClassObfuscator : Obfuscator.EntityObfuscator<ClassSpecification, ClassMap
     override fun findMapping(spec: ClassSpecification): ClassMapping? =
         mappings.toList().firstOrNull { spec.className == it.deobfuscated.toDotSeparated() }
 
-    override fun createSpec(map: ClassMapping) = ClassSpecification(
+    override fun findReverseMapping(spec: ClassSpecification): ClassMapping? =
+        mappings.toList().firstOrNull { spec.className == it.obfuscated.toDotSeparated() }
+
+    override fun createObfuscatedSpec(map: ClassMapping) = ClassSpecification(
         className = map.obfuscated.toDotSeparated()
+    )
+
+    override fun createDeobfuscatedSpec(map: ClassMapping) = ClassSpecification(
+        className = map.deobfuscated.toDotSeparated()
     )
 }

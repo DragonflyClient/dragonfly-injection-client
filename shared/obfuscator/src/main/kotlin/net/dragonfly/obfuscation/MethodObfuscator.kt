@@ -12,9 +12,20 @@ class MethodObfuscator : Obfuscator.EntityObfuscator<MethodSpecification, Method
             .filter { it.deobfuscated == spec.methodName }
             .firstOrNull { spec.descriptor == null || it.deobfuscatedDescriptor.toString() == spec.descriptor }
 
-    override fun createSpec(map: MethodMapping) = MethodSpecification(
+    override fun findReverseMapping(obfSpec: MethodSpecification): MethodMapping? =
+        mappings.toList().filter { it.classMapping.obfuscated == obfSpec.clazz.toSlashSeparated() }
+            .filter { it.obfuscated == obfSpec.methodName }
+            .firstOrNull { obfSpec.descriptor == null || it.obfuscatedDescriptor.toString() == obfSpec.descriptor }
+
+    override fun createObfuscatedSpec(map: MethodMapping) = MethodSpecification(
         clazz = map.classMapping.obfuscated.toDotSeparated(),
         methodName = map.obfuscated,
         descriptor = map.obfuscatedDescriptor.toString()
+    )
+
+    override fun createDeobfuscatedSpec(map: MethodMapping) = MethodSpecification(
+        clazz = map.classMapping.deobfuscated.toDotSeparated(),
+        methodName = map.deobfuscated,
+        descriptor = map.deobfuscatedDescriptor.toString()
     )
 }

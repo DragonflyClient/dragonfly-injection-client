@@ -12,8 +12,9 @@ editions.forEach { (version, codename) ->
 println("--------------------------------\n")
 
 tasks {
-    editions.forEach { edition ->
-        val (version, codename) = edition
+    editionProjects.forEach { edition ->
+        val version = edition.name.extractVersion()
+        val codename = edition.name.extractCodename()
 
         create<Exec>("mappings-$version") {
             onlyIf {
@@ -30,30 +31,30 @@ tasks {
 
         create<Exec>("obfuscate-$version") {
             onlyIf {
-                !project(":$version:injection-hook").tasks.getByName("jar").state.upToDate ||
+                !project(":${edition.name}:injection-hook").tasks.getByName("jar").state.upToDate ||
                         !project(":shared:obfuscator").tasks.getByName("binJar").state.upToDate
             }
 
             group = "$version ($codename)"
-            dependsOn("mappings-$version", ":$version:injection-hook:jar", ":shared:obfuscator:binJar")
+            dependsOn("mappings-$version", ":${edition.name}:injection-hook:jar", ":shared:obfuscator:binJar")
 
             workingDir = projectDir
             commandLine("cmd", "/c", "java", "-jar", "bin/obfuscator.jar")
             args("--reversed", "mappings/$version/reversed.srg")
             args("--mapping-index", "mappings/$version/index.pack")
-            args("--minecraft-jar", "$version/minecraft/build/libs/minecraft-1.0-SNAPSHOT.jar")
-            args("--input-jar", "$version/injection-hook/build/libs/injection-hook-$version.jar")
-            args("--output-jar", "$version/injection-hook/build/libs/injection-hook-$version-obfuscated.jar")
+            args("--minecraft-jar", "${edition.name}/minecraft/build/libs/minecraft-1.0-SNAPSHOT.jar")
+            args("--input-jar", "${edition.name}/injection-hook/build/libs/injection-hook-$version.jar")
+            args("--output-jar", "${edition.name}/injection-hook/build/libs/injection-hook-$version-obfuscated.jar")
             args("--special-source", "bin/specialsource.jar")
         }
 
         create<Copy>("components-$version") {
             group = "$version ($codename)"
-            dependsOn("obfuscate-$version", ":shared:agent:jar", ":shared:injection-hook:jar")
+            dependsOn("obfuscate-$version", ":shared:agent:jar", ":shared:dragonfly-core:jar")
             from(
-                "$version/injection-hook/build/libs/injection-hook-$version-obfuscated.jar",
+                "${edition.name}/injection-hook/build/libs/injection-hook-$version-obfuscated.jar",
                 "shared/agent/build/libs",
-                "shared/injection-hook/build/libs"
+                "shared/dragonfly-core/build/libs"
             )
             into("components/$version")
             rename {
@@ -81,7 +82,8 @@ tasks {
                 .start()
         }
 
-        workingDir = file("D:\\Inception Cloud\\Workspace\\Dragonfly\\dragonfly-launcher")
+        workingDir = file(project.property("net.dragonfly.launcher.path")
+            ?: throw IllegalStateException("No net.dragonfly.launcher.path in gradle.properties"))
         commandLine("cmd", "/c", "npm", "start")
     }
 

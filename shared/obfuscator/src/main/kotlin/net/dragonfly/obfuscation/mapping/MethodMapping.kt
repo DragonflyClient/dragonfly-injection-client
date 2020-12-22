@@ -15,5 +15,14 @@ data class MethodDescriptor(
     val parameters: String,
     val returnType: String,
 ) {
+    companion object {
+        fun fromString(s: String): MethodDescriptor {
+            val split = s.split(")")
+            val params = split[0].removePrefix("(")
+            val returnType = split[1]
+            return MethodDescriptor(params, returnType)
+        }
+    }
+
     override fun toString() = "($parameters)$returnType"
 }

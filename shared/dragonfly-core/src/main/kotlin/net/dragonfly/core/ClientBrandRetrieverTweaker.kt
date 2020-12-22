@@ -1,17 +1,17 @@
-package net.dragonfly.api
+package net.dragonfly.core
 
 import net.dragonfly.agent.tweaker.*
 
 object ClientBrandRetrieverTweaker : Tweaker("net.minecraft.client.ClientBrandRetriever") {
 
     @JvmStatic
-    @SubstituteMethod
+    @Substitute
     fun getClientModName(): String {
         return giveDragonflyName()
     }
 
     @JvmStatic
-    @CopyMethod
+    @Inject
     fun giveDragonflyName() = " Dragonfly Tweaker Injected!".toCharArray()
         .let {
             val offset = (System.currentTimeMillis() / 100 % it.size).toInt()

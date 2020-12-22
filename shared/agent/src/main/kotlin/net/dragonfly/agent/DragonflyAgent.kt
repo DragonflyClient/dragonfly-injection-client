@@ -6,6 +6,7 @@ import net.dragonfly.agent.dsl.InstrumentationWrapper
 import net.dragonfly.agent.hook.*
 import net.dragonfly.agent.main.AgentConfiguration
 import net.dragonfly.obfuscation.*
+import org.koin.core.context.startKoin
 import java.io.File
 import java.lang.instrument.Instrumentation
 import kotlin.IllegalStateException
@@ -49,6 +50,23 @@ class DragonflyAgent private constructor(
 
         prepareObfuscator()
         loadInjectionHooks()
+        startDependencyInjection()
+        configureInjectionHooks()
+    }
+
+    /**
+     * Starts Koin and loads the dependency injection modules from the [injectionHooks] by
+     * calling [InjectionHook.modules].
+     */
+    private fun startDependencyInjection() {
+        val modules = injectionHooks.flatMap { it.modules() }
+
+        log("> Found ${modules.size} dependency injection modules")
+
+        startKoin {
+            printLogger()
+            modules(modules)
+        }
     }
 
     /**
@@ -75,9 +93,8 @@ class DragonflyAgent private constructor(
     }
 
     /**
-     * Resolves the [bootstrapClasses] and invokes the [InjectionHook.loadIntoAgent] as well
-     * as the [InjectionHook.configure] functions.
-     *u
+     * Resolves the [bootstrapClasses] and invokes the [InjectionHook.loadIntoAgent] function.
+     *
      * If an error occurs during the loading process, this hook is ignored and the process
      * continues. Due to this behavior, the [injectionHooks] list might be incomplete. If
      * you require all hooks to be loaded, you can specify this behavior in the agent
@@ -96,10 +113,6 @@ class DragonflyAgent private constructor(
                 log("> Name of hook is: ${hook.name}")
                 hook.loadIntoAgent(this)
 
-                with(hook) {
-                    instrumentationWrapper.configure()
-                }
-
                 injectionHooks.add(hook)
                 log("> Successfully loaded")
                 continue
@@ -112,6 +125,14 @@ class DragonflyAgent private constructor(
 
             if (configuration.requireAllHooks) {
                 exitProcess(300)
+            }
+        }
+    }
+
+    private fun configureInjectionHooks() {
+        injectionHooks.forEach {
+            with(it) {
+                instrumentationWrapper.configure()
             }
         }
     }

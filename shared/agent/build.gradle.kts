@@ -8,6 +8,7 @@ version = "1.0-SNAPSHOT"
 
 repositories {
     mavenCentral()
+    jcenter()
 }
 
 dependencies {
@@ -20,6 +21,7 @@ dependencies {
     implementation("org.ow2.asm:asm-util:9.0")
 
     implementation("com.xenomachina:kotlin-argparser:2.0.7")
+    implementation("org.koin:koin-core:2.2.0")
 
     implementation(project(":shared:obfuscator"))
 }

@@ -2,6 +2,7 @@ package net.dragonfly.agent.hook
 
 import net.dragonfly.agent.DragonflyAgent
 import net.dragonfly.agent.dsl.InstrumentationWrapper
+import org.koin.core.module.Module
 
 /**
  * An interface that allows so-called injection hooks to add functionality to the default
@@ -35,4 +36,9 @@ abstract class InjectionHook {
      * Called when the hook is loaded into the [agent].
      */
     open fun loadIntoAgent(agent: DragonflyAgent) {}
+
+    /**
+     * Can return modules for dependency injection if this injection hook provides any.
+     */
+    open fun modules(): List<Module> = emptyList()
 }

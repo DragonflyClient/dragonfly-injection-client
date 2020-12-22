@@ -1,6 +1,10 @@
 package net.dragonfly.agent.hook
 
 import net.dragonfly.agent.DragonflyAgent
+import org.koin.core.logger.Logger
+import org.koin.core.logger.MESSAGE
+
+typealias KoinLevel = org.koin.core.logger.Level
 
 /**
  * Interface that is used by the Dragonfly Agent to publish log messages.
@@ -9,8 +13,18 @@ import net.dragonfly.agent.DragonflyAgent
  * (like for log4j) create a new implementation of this interface and update the [DragonflyAgent.loggingProvider]
  * property.
  */
-interface LoggingProvider {
-    fun sendLog(message: String, level: Level)
+abstract class LoggingProvider : Logger() {
+    abstract fun sendLog(message: String, level: Level)
+
+    override fun log(level: KoinLevel, msg: MESSAGE) {
+        val dragonflyLevel = when(level) {
+            KoinLevel.DEBUG -> Level.DEBUG
+            KoinLevel.INFO -> Level.INFO
+            KoinLevel.ERROR -> Level.ERROR
+            KoinLevel.NONE -> Level.TRACE
+        }
+        sendLog(msg, dragonflyLevel)
+    }
 }
 
 /**
@@ -25,7 +39,7 @@ enum class Level {
  * The default implementation of [LoggingProvider] which just appends a the level as a prefix
  * to the message and prints it the standard output stream.
  */
-object DefaultLoggingProvider : LoggingProvider {
+object DefaultLoggingProvider : LoggingProvider() {
     override fun sendLog(message: String, level: Level) {
         println("[${level.name}]: $message")
     }

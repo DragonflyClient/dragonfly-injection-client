@@ -8,6 +8,7 @@ version = "1.0-SNAPSHOT"
 
 repositories {
     mavenCentral()
+    jcenter()
 }
 
 dependencies {
@@ -18,8 +19,11 @@ dependencies {
     compileOnly("org.ow2.asm:asm-tree:9.0")
     compileOnly("org.ow2.asm:asm-util:9.0")
 
+    compileOnly("org.koin:koin-core:2.2.0")
+
     compileOnly(project(":shared:agent"))
     compileOnly(project(":shared:obfuscator"))
+    compileOnly(project(":shared:dragonfly-core"))
     compileOnly(project(":1.8.8-octane:minecraft"))
     compileOnly(fileTree("../minecraft/libraries/"))
 }

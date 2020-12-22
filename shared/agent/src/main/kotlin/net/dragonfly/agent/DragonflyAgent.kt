@@ -64,7 +64,7 @@ class DragonflyAgent private constructor(
         log("> Found ${modules.size} dependency injection modules")
 
         startKoin {
-            printLogger()
+            logger(loggingProvider)
             modules(modules)
         }
     }

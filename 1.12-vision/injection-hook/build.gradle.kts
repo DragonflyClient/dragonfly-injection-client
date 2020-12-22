@@ -8,6 +8,7 @@ version = "1.0-SNAPSHOT"
 
 repositories {
     mavenCentral()
+    jcenter()
 }
 
 dependencies {
@@ -17,6 +18,8 @@ dependencies {
     compileOnly("org.ow2.asm:asm:9.0")
     compileOnly("org.ow2.asm:asm-tree:9.0")
     compileOnly("org.ow2.asm:asm-util:9.0")
+
+    compileOnly("org.koin:koin-core:2.2.0")
 
     compileOnly(project(":shared:agent"))
     compileOnly(project(":1.12-vision:minecraft"))

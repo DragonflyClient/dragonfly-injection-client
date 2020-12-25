@@ -14,7 +14,7 @@ typealias KoinLevel = org.koin.core.logger.Level
  * property.
  */
 abstract class LoggingProvider : Logger() {
-    abstract fun sendLog(message: String, level: Level)
+    abstract fun sendLog(message: String, level: Level, logger: String = "dragonfly-injector")
 
     override fun log(level: KoinLevel, msg: MESSAGE) {
         val dragonflyLevel = when(level) {
@@ -23,7 +23,7 @@ abstract class LoggingProvider : Logger() {
             KoinLevel.ERROR -> Level.ERROR
             KoinLevel.NONE -> Level.TRACE
         }
-        sendLog(msg, dragonflyLevel)
+        sendLog(msg, level = dragonflyLevel, logger = "dependency-injection")
     }
 }
 
@@ -40,7 +40,7 @@ enum class Level {
  * to the message and prints it the standard output stream.
  */
 object DefaultLoggingProvider : LoggingProvider() {
-    override fun sendLog(message: String, level: Level) {
-        println("[${level.name}]: $message")
+    override fun sendLog(message: String, level: Level, logger: String) {
+        println("[$logger] [${level.name}]: $message")
     }
 }

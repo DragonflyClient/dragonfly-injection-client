@@ -8,8 +8,8 @@ import org.apache.logging.log4j.LogManager
 typealias Log4jLevel = org.apache.logging.log4j.Level
 
 object VisionLoggingProvider : LoggingProvider() {
-    override fun sendLog(message: String, level: Level) {
-        LogManager.getLogger("dragonfly-injector").log(translateLevel(level), message)
+    override fun sendLog(message: String, level: Level, logger: String) {
+        LogManager.getLogger(logger).log(translateLevel(level), message)
     }
 
     private fun translateLevel(input: Level): Log4jLevel = when(input) {

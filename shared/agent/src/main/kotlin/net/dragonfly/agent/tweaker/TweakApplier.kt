@@ -94,7 +94,7 @@ internal class TweakApplier private constructor(
     fun runMethodInjection() = apply {
         val candidates = src.methods.filter { it.hasAnnotation(Inject::class) }
         candidates.forEach { method ->
-            DragonflyAgent.getInstance().log("> Injecting method ${method.name}")
+            DragonflyAgent.getInstance().log("> Injecting method ${method.name}", Level.TRACE)
             dest.methods.add(method)
         }
     }
@@ -109,7 +109,7 @@ internal class TweakApplier private constructor(
     fun runFieldInjection() = apply {
         val candidates = src.fields.filter { it.hasAnnotation(Inject::class) }
         candidates.forEach { field ->
-            DragonflyAgent.getInstance().log("> Injecting field ${field.name}")
+            DragonflyAgent.getInstance().log("> Injecting field ${field.name}", Level.TRACE)
             dest.fields.add(field)
         }
     }

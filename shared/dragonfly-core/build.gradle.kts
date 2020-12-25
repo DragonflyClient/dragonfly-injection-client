@@ -28,4 +28,8 @@ tasks {
     jar {
         archiveFileName.set("dragonfly-core.jar")
     }
+
+    compileKotlin {
+        kotlinOptions.jvmTarget = "1.8"
+    }
 }

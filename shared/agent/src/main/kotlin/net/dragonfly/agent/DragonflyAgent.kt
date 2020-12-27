@@ -2,6 +2,8 @@
 
 package net.dragonfly.agent
 
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import net.dragonfly.agent.dsl.InstrumentationWrapper
 import net.dragonfly.agent.hook.*
 import net.dragonfly.agent.main.AgentConfiguration
@@ -37,6 +39,9 @@ class DragonflyAgent private constructor(
 
     /** The message provider that is used by the agent to publish log messages */
     var loggingProvider: LoggingProvider = DefaultLoggingProvider
+
+    /** An instance of a Jackson [ObjectMapper] that is used by the agent to parse JSON files */
+    val jackson: ObjectMapper = jacksonObjectMapper()
 
     /**
      * Sets up the agent by first calling the `premain` functions of all [bootstrapClasses],
@@ -129,6 +134,9 @@ class DragonflyAgent private constructor(
         }
     }
 
+    /**
+     * Calls the [InjectionHook.configure] function on all [injectionHooks].
+     */
     private fun configureInjectionHooks() {
         injectionHooks.forEach {
             with(it) {
@@ -140,8 +148,13 @@ class DragonflyAgent private constructor(
     /**
      * Logs the [message] with the [level] using the [loggingProvider].
      */
-    fun log(message: String, level: Level = Level.INFO) {
-        loggingProvider.sendLog(message, level)
+    fun log(message: Any, level: Level = Level.INFO) {
+        val stringRepresentation = when(message) {
+            is Throwable -> message.stackTraceToString()
+            else -> message.toString()
+        }
+
+        loggingProvider.sendLog(stringRepresentation, level)
     }
 
     companion object {

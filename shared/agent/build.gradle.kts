@@ -22,6 +22,8 @@ dependencies {
 
     implementation("com.xenomachina:kotlin-argparser:2.0.7")
     implementation("org.koin:koin-core:2.2.0")
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.11.3")
+    implementation("com.fasterxml.jackson.core:jackson-core:2.11.3")
 
     implementation(project(":shared:obfuscator"))
 }

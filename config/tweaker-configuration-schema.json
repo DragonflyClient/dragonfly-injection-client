@@ -1,0 +1,71 @@
+{
+    "$schema": "https://json-schema.org/draft-07/schema#",
+    "$id": "D:\\Inception Cloud\\Workspace\\Dragonfly\\dragonfly-injection-client\\config\\dragin-tweaker-configuration-schema.json",
+    "title": "DragIn - Tweaker Configuration",
+    "description": "Specifies metadata about tweakers created with the DragIn modding framework",
+    "type": "object",
+    "properties": {
+        "target": {
+            "description": "The qualified name of the class that is targeted by the tweaker",
+            "type": "string"
+        },
+        "fields": {
+            "description": "Specifies metadata about the fields of the tweaker",
+            "type": "object",
+            "patternProperties": {
+                ".": {
+                    "anyOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "object",
+                            "properties": {
+                                "name": {
+                                    "description": "The translated name of the field",
+                                    "type": "string"
+                                },
+                                "owner": {
+                                    "description": "The qualified name of the translated owner of the field",
+                                    "type": "string"
+                                }
+                            },
+                            "additionalProperties": false
+                        }
+                    ]
+                }
+            }
+        },
+        "methods": {
+            "description": "Specifies metadata about the methods of the tweaker",
+            "type": "object",
+            "patternProperties": {
+                ".": {
+                    "anyOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "object",
+                            "properties": {
+                                "name": {
+                                    "description": "The translated name of the method",
+                                    "type": "string"
+                                },
+                                "descriptor": {
+                                    "description": "The translated descriptor of the method",
+                                    "type": "string"
+                                },
+                                "owner": {
+                                    "description": "The qualified name of the translated owner of the method",
+                                    "type": "string"
+                                }
+                            },
+                            "additionalProperties": false
+                        }
+                    ]
+                }
+            }
+        }
+    }
+}

@@ -2,7 +2,7 @@ package net.dragonfly.core
 
 import net.dragonfly.agent.tweaker.*
 
-class GuiMainMenuTweaker(guiName: String) : Tweaker(guiName) {
+class GuiMainMenuTweaker : Tweaker() {
 
     @Inject
     var timesPressed: Int = 0
@@ -10,7 +10,7 @@ class GuiMainMenuTweaker(guiName: String) : Tweaker(guiName) {
     @Redirect
     var splashText: String? = null
 
-    @Redirect(origin = Origin(DynamicOrigin.SUPERCLASS))
+    @Redirect
     var buttonList: MutableList<Any> = mutableListOf()
 
     @Substitute

@@ -13,6 +13,6 @@ object SharedInjectionHook : InjectionHook() {
 
     override fun InstrumentationWrapper.configure() {
 //        tweaker(ClientBrandRetrieverTweaker)
-        tweaker(GuiMainMenuTweaker(guiProvider.getMainMenu()))
+        tweaker(GuiMainMenuTweaker())
     }
 }

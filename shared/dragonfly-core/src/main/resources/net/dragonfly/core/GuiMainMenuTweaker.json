@@ -1,0 +1,8 @@
+{
+    "target": "net.minecraft.client.gui.GuiMainMenu",
+    "fields": {
+        "buttonList": {
+            "owner": "net.minecraft.client.gui.GuiScreen"
+        }
+    }
+}

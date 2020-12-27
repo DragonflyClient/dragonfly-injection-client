@@ -68,7 +68,7 @@ internal class TweakApplier private constructor(
     fun runMethodSubstitution() = apply {
         val candidates = src.methods.filter { it.hasAnnotation(Substitute::class) }
         candidates.forEach { method ->
-            val spec = MethodSpecification(tweaker.targetClass.className, method.name, method.desc).obfuscated
+            val spec = tweaker.methodSpecOf(method.name, method.desc).obfuscated
             val old = dest.methods.firstOrNull { o -> o.name == spec.methodName && o.desc == spec.descriptor }
 
             if (old != null) {

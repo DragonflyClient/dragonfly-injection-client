@@ -90,7 +90,7 @@ open class Tweaker(private val inputTargetClassName: String?) {
 
     /**
      * Loads the configuration of the tweaker by searching the classpath of every injection
-     * hook for files matching the name of the tweaker class and a *.json* extension.
+     * hook for files matching the qualified name of the tweaker class and a *.json* extension.
      *
      * The configuration which is found first will act as the base configuration, while all
      * other configs found later are merged into the base one using the [mergeJson] function.
@@ -101,7 +101,7 @@ open class Tweaker(private val inputTargetClassName: String?) {
      * the [tweaker config][config] being null.
      *
      * If an error occurs during the parsing of a config file, the file is skipped and the
-     * process can continue. This is important since
+     * process can continue.
      */
     private fun loadConfiguration(): ObjectNode? {
         var result: ObjectNode? = null

@@ -90,7 +90,7 @@ open class Tweaker(private val inputTargetClassName: String?) {
 
     /**
      * Loads the configuration of the tweaker by searching the classpath of every injection
-     * hook for files matching the simple name of the tweaker class and a *.json* extension.
+     * hook for files matching the name of the tweaker class and a *.json* extension.
      *
      * The configuration which is found first will act as the base configuration, while all
      * other configs found later are merged into the base one using the [mergeJson] function.
@@ -105,16 +105,16 @@ open class Tweaker(private val inputTargetClassName: String?) {
      */
     private fun loadConfiguration(): ObjectNode? {
         var result: ObjectNode? = null
-        val resourceName = this::class.java.simpleName + ".json"
 
         DragonflyAgent.getInstance().injectionHooks.forEach { hook ->
+            val resourceName = "/${hook.simpleName}/${this::class.java.name}.json"
             hook::class.java.getResourceAsStream(resourceName)?.runCatching {
                 val content = bufferedReader().readText()
                 val parsed = DragonflyAgent.getInstance().jackson.readTree(content) as ObjectNode
 
                 result = if (result == null) parsed else mergeJson(result!!, parsed)
             }?.onFailure { throwable ->
-                DragonflyAgent.getInstance().log("Exception during parsing of config file $resourceName " +
+                DragonflyAgent.getInstance().log("Exception during parsing of tweaker config file $resourceName " +
                         "in classpath of injection hook ${hook.qualifiedName}", Level.ERROR)
                 DragonflyAgent.getInstance().log(throwable, Level.ERROR)
             }

@@ -7,6 +7,7 @@ import net.dragonfly.vortex.logging.VortexLoggingProvider
 
 object DragonflyVortex : InjectionHook() {
     override val name: String = "Dragonfly Vortex Edition for Minecraft 1.16.4"
+    override val simpleName: String = "dragonfly-vortex"
 
     override fun premain(agent: DragonflyAgent) {
         VortexLoggingProvider.inject(agent)

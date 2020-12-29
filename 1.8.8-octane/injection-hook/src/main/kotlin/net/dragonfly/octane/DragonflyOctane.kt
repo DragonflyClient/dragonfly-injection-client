@@ -11,6 +11,7 @@ typealias Log4jLevel = org.apache.logging.log4j.Level
 
 object DragonflyOctane : InjectionHook() {
     override val name: String = "Dragonfly Octane Edition for Minecraft 1.8.8"
+    override val simpleName: String = "dragonfly-octane"
 
     override fun premain(agent: DragonflyAgent) {
         OctaneLoggingProvider.inject(agent)

@@ -20,6 +20,11 @@ abstract class InjectionHook {
     abstract val name: String
 
     /**
+     * A simple name that can be used for directories to identify the hook.
+     */
+    abstract val simpleName: String
+
+    /**
      * Configures the Java Instrumentation instance. This function allows the hook to inject
      * its tweakers and other bytecode transformers.
      */

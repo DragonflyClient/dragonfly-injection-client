@@ -7,6 +7,7 @@ import net.dragonfly.vision.logging.VisionLoggingProvider
 
 object DragonflyVision : InjectionHook() {
     override val name: String = "Dragonfly Vision Edition Minecraft 1.12"
+    override val simpleName: String = "draognfly-vision"
 
     override fun premain(agent: DragonflyAgent) {
         VisionLoggingProvider.inject(agent)

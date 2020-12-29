@@ -1,31 +1,21 @@
 package net.dragonfly.core
 
 import net.dragonfly.agent.tweaker.*
+import net.dragonfly.core.api.IGuiMultiplayer
+import net.dragonfly.core.api.IMinecraft
+import kotlin.concurrent.thread
 
 class GuiMainMenuTweaker : Tweaker() {
 
-    @Inject
-    var timesPressed: Int = 0
-
-    @Redirect
-    var splashText: String? = null
-
-    @Redirect
-    var buttonList: MutableList<Any> = mutableListOf()
-
     @Substitute
     fun switchToRealms() {
-        splashText = "Button pressed ${++timesPressed} times"
-
-        if (timesPressed % 2 != 0) {
-            addSingleplayerMultiplayerButtons(10, 10)
-        } else {
-            buttonList.removeLast()
-            buttonList.removeLast()
-            buttonList.removeLast()
+        val mc = IMinecraft.getInstance()
+        mc.displayGuiScreen(IGuiMultiplayer.create(mc.getCurrentScreen()))
+        thread(start = true) {
+            Thread.sleep(5000)
+            mc.runInMinecraftThread {
+                (mc.getCurrentScreen() as IGuiMultiplayer).connectToSelected()
+            }
         }
     }
-
-    @Redirect
-    fun addSingleplayerMultiplayerButtons(a: Int, b: Int) {}
 }

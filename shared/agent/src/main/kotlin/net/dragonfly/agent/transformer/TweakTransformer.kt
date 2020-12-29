@@ -1,6 +1,7 @@
 package net.dragonfly.agent.transformer
 
 import net.dragonfly.agent.DragonflyAgent
+import net.dragonfly.agent.hook.Level
 import net.dragonfly.agent.tweaker.*
 import org.objectweb.asm.*
 import org.objectweb.asm.tree.*
@@ -39,8 +40,8 @@ class TweakTransformer(
                 .runRedirection()
                 .writeClass()
         } catch (e: Exception) {
-            DragonflyAgent.getInstance().log("! Error transforming class $targetClassName!")
-            DragonflyAgent.getInstance().log(e.stackTraceToString())
+            DragonflyAgent.getInstance().log("! Error transforming class $targetClassName!", Level.ERROR)
+            DragonflyAgent.getInstance().log(e.stackTraceToString(), Level.ERROR)
         }
 
         return classfileBuffer
@@ -50,11 +51,5 @@ class TweakTransformer(
 fun MethodNode.hasAnnotation(kclass: KClass<*>) =
     visibleAnnotations?.any { it.desc == Type.getDescriptor(kclass.java) } == true
 
-fun MethodNode.getAnnotation(kclass: KClass<*>) =
-    visibleAnnotations?.firstOrNull { it.desc == Type.getDescriptor(kclass.java) }
-
 fun FieldNode.hasAnnotation(kclass: KClass<*>) =
     visibleAnnotations?.any { it.desc == Type.getDescriptor(kclass.java) } == true
-
-fun FieldNode.getAnnotation(kclass: KClass<*>) =
-    visibleAnnotations?.firstOrNull { it.desc == Type.getDescriptor(kclass.java) }

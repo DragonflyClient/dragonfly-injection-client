@@ -43,11 +43,6 @@ abstract class InjectionHook {
     open fun loadIntoAgent(agent: DragonflyAgent) {}
 
     /**
-     * Can return modules for dependency injection if this injection hook provides any.
-     */
-    open fun modules(): List<Module> = emptyList()
-
-    /**
      * Returns a more readable [name] of the tweaker to be distinguishable from other
      * parts of a log message.
      */

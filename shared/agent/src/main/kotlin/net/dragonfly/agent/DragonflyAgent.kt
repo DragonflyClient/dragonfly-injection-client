@@ -54,9 +54,10 @@ class DragonflyAgent private constructor(
         log("> Setting up agent for Minecraft $minecraftVersion")
 
         prepareObfuscator()
+
         loadInjectionHooks()
-        startDependencyInjection()
         configureInjectionHooks()
+        startDependencyInjection()
     }
 
     /**
@@ -64,7 +65,10 @@ class DragonflyAgent private constructor(
      * calling [InjectionHook.modules].
      */
     private fun startDependencyInjection() {
-        val modules = injectionHooks.flatMap { it.modules() }
+        val modules = bootstrapClasses.map { "${it}Modules" }
+            .map { kotlin.runCatching { Class.forName(it) }.getOrNull() }
+            .map { it?.kotlin?.objectInstance as InjectionHookModules? }
+            .flatMap { it?.modules() ?: emptyList() }
 
         log("> Found ${modules.size} dependency injection modules")
 

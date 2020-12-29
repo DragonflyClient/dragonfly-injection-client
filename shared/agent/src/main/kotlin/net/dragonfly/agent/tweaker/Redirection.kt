@@ -2,7 +2,6 @@ package net.dragonfly.agent.tweaker
 
 import net.dragonfly.agent.DragonflyAgent
 import net.dragonfly.agent.hook.Level
-import net.dragonfly.agent.transformer.getAnnotation
 import net.dragonfly.agent.transformer.hasAnnotation
 import net.dragonfly.obfuscation.Obfuscator
 import net.dragonfly.obfuscation.mapping.*

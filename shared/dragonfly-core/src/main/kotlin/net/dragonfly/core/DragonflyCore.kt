@@ -4,7 +4,6 @@ package net.dragonfly.core
 
 import net.dragonfly.agent.dsl.InstrumentationWrapper
 import net.dragonfly.agent.hook.*
-import net.dragonfly.api.GuiProvider
 
 object DragonflyCore : InjectionHook() {
     override val name: String = "Dragonfly Core"

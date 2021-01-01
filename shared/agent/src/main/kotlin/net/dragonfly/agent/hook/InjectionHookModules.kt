@@ -7,7 +7,7 @@ import org.koin.core.module.Module
  * dependency injection modules.
  *
  * The Kotlin objects must have the name of the injection hook class followed by
- * "Modules", e.g: `DragonflyOctaneModules` or `DragonflyCoreModules`.
+ * "Modules", e.g: `DragonflyOctane` → `DragonflyOctaneModules`.
  */
 interface InjectionHookModules {
 

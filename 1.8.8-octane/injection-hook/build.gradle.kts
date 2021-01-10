@@ -32,4 +32,8 @@ tasks {
     jar {
         archiveFileName.set("injection-hook-1.8.8.jar")
     }
+
+    compileKotlin {
+        kotlinOptions.jvmTarget = "1.8"
+    }
 }

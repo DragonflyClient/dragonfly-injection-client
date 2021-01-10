@@ -26,6 +26,8 @@ dependencies {
     implementation("com.fasterxml.jackson.core:jackson-core:2.11.3")
 
     implementation(project(":shared:obfuscator"))
+
+    compileOnly(fileTree("libraries"))
 }
 
 tasks {

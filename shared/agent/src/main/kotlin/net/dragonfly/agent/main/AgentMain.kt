@@ -3,6 +3,7 @@ package net.dragonfly.agent.main
 import com.xenomachina.argparser.ArgParser
 import com.xenomachina.argparser.mainBody
 import net.dragonfly.agent.DragonflyAgent
+import net.dragonfly.agent.classloader.ClassLoaderManager
 import java.lang.instrument.Instrumentation
 
 /**
@@ -18,10 +19,16 @@ import java.lang.instrument.Instrumentation
 object AgentMain {
 
     @JvmStatic
-    fun premain(input: String?, instrumentation: Instrumentation) = mainBody {
+    fun premain(input: String?, instrumentation: Instrumentation): Unit = mainBody {
+        with(ClassLoaderManager) {
+            registerTransformer(instrumentation)
+            switchContextClassLoader()
+        }
+
         val args = input?.split(" ")?.toTypedArray() ?: arrayOf()
         val config = ArgParser(args).parseInto(::AgentConfiguration)
 
+        println("> Bootstrapping Dragonfly Agent")
         DragonflyAgent.create(config, instrumentation)
     }
 }

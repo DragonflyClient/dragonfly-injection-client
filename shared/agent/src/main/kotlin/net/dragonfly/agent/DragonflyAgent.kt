@@ -4,6 +4,7 @@ package net.dragonfly.agent
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import net.dragonfly.agent.classloader.ClassLoaderManager
 import net.dragonfly.agent.dsl.InstrumentationWrapper
 import net.dragonfly.agent.hook.*
 import net.dragonfly.agent.main.AgentConfiguration
@@ -66,7 +67,7 @@ class DragonflyAgent private constructor(
      */
     private fun startDependencyInjection() {
         val modules = bootstrapClasses.map { "${it}Modules" }
-            .map { kotlin.runCatching { Class.forName(it) }.getOrNull() }
+            .map { kotlin.runCatching { Class.forName(it, false, ClassLoaderManager.launchClassLoader) }.getOrNull() }
             .map { it?.kotlin?.objectInstance as InjectionHookModules? }
             .flatMap { it?.modules() ?: emptyList() }
 
@@ -96,7 +97,8 @@ class DragonflyAgent private constructor(
     private fun callPremains() {
         bootstrapClasses.forEach {
             it.runCatching {
-                (Class.forName(this).kotlin.objectInstance as InjectionHook).premain(this@DragonflyAgent)
+                (Class.forName(this, false, ClassLoaderManager.launchClassLoader)
+                    .kotlin.objectInstance as InjectionHook).premain(this@DragonflyAgent)
             }
         }
     }
@@ -114,7 +116,7 @@ class DragonflyAgent private constructor(
 
         for (bootstrap in bootstrapClasses) {
             try {
-                val clazz = Class.forName(bootstrap).kotlin
+                val clazz = Class.forName(bootstrap, false, ClassLoaderManager.launchClassLoader).kotlin
 
                 log("== $bootstrap ==")
                 val hook = clazz.objectInstance as InjectionHook
@@ -174,6 +176,7 @@ class DragonflyAgent private constructor(
          *
          * @throws IllegalStateException no instance of the Dragonfly Agent exists
          */
+        @JvmStatic
         fun getInstance(): DragonflyAgent = instance
             ?: throw IllegalStateException("The Dragonfly Agent has not been attached to a JVM")
 

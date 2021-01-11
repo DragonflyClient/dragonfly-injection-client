@@ -28,7 +28,7 @@ object AgentMain {
         val args = input?.split(" ")?.toTypedArray() ?: arrayOf()
         val config = ArgParser(args).parseInto(::AgentConfiguration)
 
-        println("> Bootstrapping Dragonfly Agent")
+        println("Bootstrapping Dragonfly Agent")
         DragonflyAgent.create(config, instrumentation)
     }
 }

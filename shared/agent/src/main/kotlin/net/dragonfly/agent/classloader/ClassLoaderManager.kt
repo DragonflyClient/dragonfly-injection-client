@@ -25,7 +25,7 @@ object ClassLoaderManager {
      * to the new one.
      */
     fun switchContextClassLoader() {
-        println("[Preparation] Switching context class loader...")
+        println("[Preparation] Switching context class loader")
 
         launchClassLoader = LaunchClassLoader(getURLs())
         Thread.currentThread().contextClassLoader = launchClassLoader

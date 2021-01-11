@@ -7,13 +7,9 @@
 /build
 gradle.properties
 
-# 1.8.8
-/1.8.8-octane/minecraft/build
-/1.8.8-octane/injection-hook/build
-
-# 1.12
-/1.12-vision/minecraft/build/
-/1.12-vision/injection-hook/build/
+# 1.8.9
+/1.8.9-octane/minecraft/build
+/1.8.9-octane/injection-hook/build
 
 # 1.16.4
 /1.16.4-vortex/minecraft/build/

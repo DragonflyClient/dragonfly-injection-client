@@ -82,11 +82,17 @@ class MappingIndexCompiler(
         println("> Downloading files")
         makeMappingsUrl(index)
             .also { println("> Mappings: $it") }
-            .readBytes().let { mappingsZip.writeBytes(it) }
+            .readBytes().let {
+                mappingsZip.createNewFile()
+                mappingsZip.writeBytes(it)
+            }
 
         makeSrgUrl(index)
             .also { println("> Searge: $it") }
-            .readBytes().let { srgZip.writeBytes(it) }
+            .readBytes().let {
+                srgZip.createNewFile()
+                srgZip.writeBytes(it)
+            }
     }
 
     private fun cleanTempDir(recreate: Boolean = false) {

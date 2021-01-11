@@ -21,6 +21,7 @@ object ZippingUtils {
                     throw IOException("Failed to create directory $parent")
                 }
 
+                newFile.createNewFile()
                 val fos = FileOutputStream(newFile)
                 var len: Int
                 while (zis.read(buffer).also { len = it } > 0) {

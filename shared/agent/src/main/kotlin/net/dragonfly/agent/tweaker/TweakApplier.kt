@@ -48,7 +48,8 @@ internal class TweakApplier private constructor(
     fun debug(target: String? = null) = apply {
         try {
             if (target == null || src.name.contains(target)) {
-                val outputFile = File("classes\\" + dest.name.replace("/", ".") + ".class")
+                val dir = File("classes").also { it.mkdirs() }
+                val outputFile = File(dir, dest.name.replace("/", ".") + ".class")
                 outputFile.writeBytes(classWriter.toByteArray())
             }
         } catch (ignored: Throwable) {
